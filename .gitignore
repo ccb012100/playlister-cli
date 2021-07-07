@@ -1,0 +1,11 @@
+.idea/
+Folder.DotSettings.user
+
+.DS_Store
+
+bin/
+obj/
+out/
+
+Logs/*.txt
+Logs/*.log
