@@ -1,4 +1,4 @@
-namespace PlaylisterCli
+namespace PlaylisterCli.Enums
 {
     public record DatabaseOptions
     {
