@@ -6,7 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PlaylisterCli.Enums;
 using PlaylisterCli.Repositories;
+using PlaylisterCli.Repositories.Implementations;
 using PlaylisterCli.Services;
+using PlaylisterCli.Services.Implementations;
 using Spectre.Console;
 
 namespace PlaylisterCli
@@ -32,11 +34,17 @@ namespace PlaylisterCli
                 {
                     if (context.HostingEnvironment.IsDevelopment()) ShowConfig(context.Configuration);
 
-                    services
-                        .Configure<DatabaseOptions>(context.Configuration.GetSection(DatabaseOptions.Database))
-                        .AddSingleton<AppHost>()
-                        .AddTransient<ISearchService, SearchService>()
-                        .AddTransient<IDbRepository, DbRepository>();
+                    services.Configure<DatabaseOptions>(context.Configuration.GetSection(DatabaseOptions.Database))
+                        .AddTransient<ISongService, SongService>()
+                        .AddTransient<IPlaylistService, PlaylistService>()
+                        .AddTransient<IAlbumService, AlbumService>()
+                        .AddTransient<IArtistService, ArtistService>()
+                        .AddTransient<ISongRepository, SongRepository>()
+                        .AddTransient<IPlaylistRepository, PlaylistRepository>()
+                        .AddTransient<IArtistRepository, ArtistRepository>()
+                        .AddTransient<IAlbumRepository, AlbumRepository>()
+                        .AddSingleton<IConnectionFactory, ConnectionFactory>()
+                        .AddSingleton<AppHost>();
 
                     // set Dapper to be compatible with snake_case table names
                     Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;

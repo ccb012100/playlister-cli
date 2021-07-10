@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PlaylisterCli.Models;
-using PlaylisterCli.Models.Data;
 using PlaylisterCli.Services;
 using Spectre.Console;
 
@@ -13,12 +10,14 @@ namespace PlaylisterCli
     public class AppHost
     {
         private readonly ILogger<AppHost> _logger;
-        private readonly ISearchService _searchService;
+        private readonly ISongService _songService;
+        private readonly IArtistService _artistService;
 
-        public AppHost(ILogger<AppHost> logger, ISearchService searchService)
+        public AppHost(ILogger<AppHost> logger, ISongService songService, IArtistService artistService)
         {
             _logger = logger;
-            _searchService = searchService;
+            _songService = songService;
+            _artistService = artistService;
         }
 
         public async Task Run()
@@ -29,11 +28,15 @@ namespace PlaylisterCli
 
             while ((selection = GetUserMenuSelection()) is not MenuOption.Exit)
             {
-                AnsiConsole.MarkupLine($"[yellow]you selected {selection}[/]");
+                AnsiConsole.MarkupLine($"[yellow]you selected [bold orange3]{selection}[/][/]");
+
                 switch (selection)
                 {
                     case MenuOption.SongSearch:
-                        await _searchService.SearchSongs();
+                        await _songService.Search();
+                        break;
+                    case MenuOption.ArtistSearch:
+                        await _artistService.Search();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException($"Invalid selection {selection}");
@@ -47,27 +50,14 @@ namespace PlaylisterCli
                 .Title("[green]Choose an option:[/]")
                 .PageSize(10)
                 .MoreChoicesText("[blue]Scroll up/down to see more options[/]")
-                .AddChoices(MenuOption.SongSearch, MenuOption.Exit);
+                .AddChoices(
+                    MenuOption.SongSearch,
+                    MenuOption.ArtistSearch,
+                    MenuOption.AlbumSearch,
+                    MenuOption.PlaylistSearch,
+                    MenuOption.Exit);
 
             return AnsiConsole.Prompt(prompt);
-        }
-
-        private static Table CreatePlaylistTable(IEnumerable<Playlist> playlists)
-        {
-            var table = new Table {Caption = new TableTitle("Playlists")};
-            table.AddColumn("Name").AddColumn("Description").AddColumn("Count");
-
-            foreach (Playlist playlist in playlists.OrderBy(x => x.Name))
-            {
-                AddPlaylistRow(table, playlist);
-            }
-
-            return table;
-        }
-
-        private static void AddPlaylistRow(Table table, Playlist plist)
-        {
-            table.AddRow(plist.Name, plist.Description ?? "", plist.Count.ToString());
         }
     }
 }

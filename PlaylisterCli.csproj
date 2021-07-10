@@ -7,23 +7,23 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Logs"/>
+        <Folder Include="Logs" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.0.90"/>
-        <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.7"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0"/>
-        <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0"/>
-        <PackageReference Include="Spectre.Console" Version="0.40.0"/>
-        <PackageReference Include="SQLite" Version="3.13.0"/>
+        <PackageReference Include="Dapper" Version="2.0.90" />
+        <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.7" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
+        <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0" />
+        <PackageReference Include="Spectre.Console" Version="0.40.0" />
+        <PackageReference Include="SQLite" Version="3.13.0" />
     </ItemGroup>
 </Project>

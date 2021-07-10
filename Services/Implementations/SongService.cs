@@ -1,40 +1,27 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using PlaylisterCli.Models;
-using PlaylisterCli.Models.Data;
 using PlaylisterCli.Repositories;
+using PlaylisterCli.Utilities;
 using Spectre.Console;
 
-namespace PlaylisterCli.Services
+namespace PlaylisterCli.Services.Implementations
 {
-    public interface ISearchService
+    public class SongService : ISongService
     {
-        Task SearchSongs();
-    }
+        private readonly ISongRepository _repository;
 
-    public class SearchService : ISearchService
-    {
-        private readonly IDbRepository _repository;
-
-        public SearchService(IDbRepository repository)
+        public SongService(ISongRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task SearchSongs()
+        public async Task Search()
         {
-            string query;
+            string query = SearchUtility.GetUserSearch();
 
-            while ((query = AnsiConsole.Ask<string>("[blue]enter your search[/]")).Length < 3)
-            {
-                AnsiConsole.MarkupLine("You search term must be at least 3 characters.");
-            }
-
-            ImmutableArray<Song> songs = (await _repository.SongSearch(query)!).ToImmutableArray();
+            ImmutableArray<Song> songs = (await _repository.Search(query)!).ToImmutableArray();
 
             if (!songs.Any())
             {

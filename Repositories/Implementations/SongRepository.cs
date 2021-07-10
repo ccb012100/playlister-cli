@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -10,36 +9,24 @@ using Microsoft.Extensions.Options;
 using PlaylisterCli.Enums;
 using PlaylisterCli.Models;
 using PlaylisterCli.Models.Data;
-using PlaylisterCli.Utilities;
 
-namespace PlaylisterCli.Repositories
+namespace PlaylisterCli.Repositories.Implementations
 {
-    public class DbRepository : IDbRepository
+    public class SongRepository : ISongRepository
     {
-        private readonly ILogger<DbRepository> _logger;
-        private readonly string _connectionString;
+        private readonly ILogger<SongRepository> _logger;
+        private readonly IConnectionFactory _connectionFactory;
 
-        private SqliteConnection Connection => new(_connectionString);
+        private SqliteConnection Connection => _connectionFactory.Connection;
 
-        public DbRepository(ILogger<DbRepository> logger, IOptions<DatabaseOptions> options)
+        public SongRepository(ILogger<SongRepository> logger, IOptions<DatabaseOptions> options,
+            IConnectionFactory connectionFactory)
         {
             _logger = logger;
-
-            _connectionString = new SqliteConnectionStringBuilder(options.Value.ConnectionString)
-            {
-                Mode = SqliteOpenMode.ReadOnly,
-                Cache = SqliteCacheMode.Shared,
-                ForeignKeys = true
-            }.ToString();
+            _connectionFactory = connectionFactory;
         }
 
-        public async Task<IEnumerable<Playlist>> GetAll()
-        {
-            await using SqliteConnection conn = Connection;
-            return await conn.QueryAsync<Playlist>("SELECT * FROM Playlist");
-        }
-
-        public async Task<IEnumerable<Song>> SongSearch(string query)
+        public async Task<IEnumerable<Song>> Search(string query)
         {
             const string searchTrackSql =
                 "SELECT id, name, track_number, disc_number, duration_ms, album_id FROM Track WHERE name LIKE '%' || @Query || '%'";
@@ -48,7 +35,7 @@ namespace PlaylisterCli.Repositories
                 "SELECT track_id, artist_id, name as ArtistName FROM TrackArtist TA JOIN Artist A ON TA.artist_id = A.id WHERE TA.track_id IN @TrackIds";
 
             const string albumSql =
-                "SELECT id, name, total_tracks, album_type, cast(release_date as string) FROM Album WHERE id IN @AlbumIds";
+                "SELECT id, name, total_tracks, album_type, release_date FROM Album WHERE id IN @AlbumIds";
 
             await using SqliteConnection conn = Connection;
 
